@@ -24,13 +24,7 @@ jobs:
       - name: Install Desktop Packages
         run: |
           # Устанавливаем через интернет
-          sudo apt install -y tigervnc-standalone-server fluxbox xterm novnc python3 openssl xorg xauth x11-xserver-utils firefox
-
-      - name: Install Local Packages via File Manager
-        run: |
-          # Пример установки пакетов из локальных .deb файлов
-          # Сначала копируем их в рабочую директорию (предположим, что они лежат в репозитории в папке files)
-          sudo dpkg -i files/*.deb || sudo apt-get install -f -y
+          sudo apt install -y tigervnc-standalone-server fluxbox xterm pcmanfm novnc python3 openssl xorg xauth x11-xserver-utils firefox
 
       - name: Copy noVNC Web Assets
         run: |
@@ -48,10 +42,14 @@ jobs:
           </html>
           EOF
 
-      - name: Start Desktop
+      - name: Start Xvfb and VNC
         run: |
-          chmod +x start-desktop.sh
-          ./start-desktop.sh
+          Xvfb :1 -screen 0 1024x768x24 &
+          sleep 2
+          DISPLAY=:1 fluxbox &
+          sleep 2
+          DISPLAY=:1 x11vnc -nopw -listen 0.0.0.0 -rfbport 5900 -forever -shared &
+          sleep 5
 
       - uses: actions/upload-pages-artifact@v3
         with:
