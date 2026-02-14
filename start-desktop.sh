@@ -33,3 +33,4 @@ x11vnc -display $DISPLAY -nopw -forever -shared >/dev/null 2>&1 &
 VNC_PID=$!
 
 echo "Xvfb PID=$XVFB_PID, x11vnc PID=$VNC_PID"
+wait
