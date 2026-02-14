@@ -6,12 +6,6 @@ sudo apt update
 sudo apt install -y plymouth plymouth-themes fluxbox xfce4-terminal firefox pcmanfm xserver-xorg xinit
 
 echo "Настройка кастомного Boot Screen..."
-if [ -d "/usr/share/plymouth/themes/boyjack" ]; then
-    sudo plymouth-set-default-theme boyjack --rebuild-initrd
-else
-    echo "Тема boyjack не найдена, используем дефолтную spinner"
-    sudo plymouth-set-default-theme spinner --rebuild-initrd
-fi
 
 echo "Настройка Fluxbox..."
 mkdir -p ~/.fluxbox
