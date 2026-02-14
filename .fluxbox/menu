@@ -1,0 +1,9 @@
+[begin] (BoyJack OS v1.0)
+    [exec] (Terminal) {xterm}
+    [exec] (File Manager) {pcmanfm}
+    [exec] (Firefox) {firefox}
+    [separator]
+    [submenu] (Power)
+        [exec] (Restart Fluxbox) {fluxbox-remote restart}
+    [end]
+[end]
