@@ -14,17 +14,20 @@ export HOME=/home/runner/workspace
 
 mkdir -p "$HOME/.fluxbox"
 
-export DISPLAY=:1
+# используем дисплей 99
+export DISPLAY=:99
 
-echo "Starting Xvfb..."
-Xvfb :1 -screen 0 1024x768x24 &
-sleep 2
+# старт Xvfb
+Xvfb $DISPLAY -screen 0 1024x768x24 -nolisten tcp &
+XVFB_PID=$!
+sleep 5  # ждем, пока Xvfb поднимется
 
-echo "Starting Fluxbox..."
-startfluxbox &
-sleep 1
+# старт fluxbox
+fluxbox &
+sleep 3
 
-echo "Starting x11vnc on port 5900..."
-x11vnc -display :1 -nopw -listen 0.0.0.0 -rfbport 5900 -forever -shared -noxdamage &
+# старт x11vnc
+x11vnc -display $DISPLAY -nopw -forever -shared &
+VNC_PID=$!
 
-echo "Desktop is running."
+echo "Xvfb PID=$XVFB_PID, x11vnc PID=$VNC_PID"
