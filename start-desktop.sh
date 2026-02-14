@@ -1,26 +1,24 @@
 #!/bin/bash
 set -eux
 
-echo "Установка Plymouth и необходимых пакетов..."
+echo "Установка Fluxbox и необходимых пакетов..."
 sudo apt update
-sudo apt install -y plymouth plymouth-themes fluxbox xfce4-terminal firefox pcmanfm xserver-xorg xinit xvfb
-
-echo "Настройка кастомного Boot Screen..."
-# Можно добавить свою тему Plymouth, если есть
-# sudo plymouth-set-default-theme boyjack --rebuild-initrd
+sudo apt install -y fluxbox xfce4-terminal pcmanfm firefox x11-xserver-utils xvfb
 
 echo "Настройка Fluxbox..."
 mkdir -p ~/.fluxbox
 
-# --- startup script ---
+# startup
 cat > ~/.fluxbox/startup <<'EOF'
 #!/bin/sh
 xfce4-terminal &
+pcmanfm &
+firefox &
 exec fluxbox
 EOF
 chmod +x ~/.fluxbox/startup
 
-# --- меню Fluxbox ---
+# меню Fluxbox
 cat > ~/.fluxbox/menu <<'EOF'
 [begin] (Fluxbox)
     [exec] (Terminal) {xfce4-terminal}
@@ -34,9 +32,8 @@ cat > ~/.fluxbox/menu <<'EOF'
 [end]
 EOF
 
-# --- fluxbox.cat для BoyJack OS v1.0 ---
+# fluxbox.cat
 cat > ~/.fluxbox/fluxbox.cat <<'EOF'
-# fluxbox.cat - BoyJack OS v1.0
 Fluxbox.Title: BoyJack OS v1.0
 Menu.Terminal: Терминал
 Menu.FileManager: Файловый менеджер
@@ -53,8 +50,8 @@ Tip.MenuWindow: Меню окна
 Tip.MenuWorkspace: Рабочее пространство
 EOF
 
-# --- Запуск Fluxbox ---
-if [ -z "$DISPLAY" ] || ! pgrep Xorg >/dev/null 2>&1; then
+# --- Запуск Xvfb и Fluxbox ---
+if [ -z "${DISPLAY:-}" ] || ! pgrep Xorg >/dev/null 2>&1; then
     echo "Запуск виртуального Xvfb..."
     Xvfb :1 -screen 0 1024x768x16 &
     export DISPLAY=:1
