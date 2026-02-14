@@ -14,6 +14,8 @@ export HOME=/home/runner/workspace
 
 mkdir -p "$HOME/.fluxbox"
 
+sudo apt install -y xkb-data
+
 # используем дисплей 99
 export DISPLAY=:99
 
@@ -23,11 +25,11 @@ XVFB_PID=$!
 sleep 5  # ждем, пока Xvfb поднимется
 
 # старт fluxbox
-fluxbox &
+fluxbox >/dev/null 2>&1 &
 sleep 3
 
 # старт x11vnc
-x11vnc -display $DISPLAY -nopw -forever -shared &
+x11vnc -display $DISPLAY -nopw -forever -shared >/dev/null 2>&1 &
 VNC_PID=$!
 
 echo "Xvfb PID=$XVFB_PID, x11vnc PID=$VNC_PID"
