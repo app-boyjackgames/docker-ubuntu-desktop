@@ -1,0 +1,61 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Web Assets
+        run: |
+          # Create a directory for GitHub Pages content
+          mkdir -p dist
+          
+          # Use the project structure to gather necessary web files
+          # In Replit, we use /tmp/novnc-web, here we recreate it
+          NOVNC_DIR="/usr/share/novnc"
+          # Install noVNC to get the files if not present (though we just need the static assets)
+          sudo apt update && sudo apt install -y novnc
+          
+          cp -r /usr/share/novnc/* dist/
+          
+          # Create the redirect index.html
+          cat > dist/index.html << 'INDEXEOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <meta http-equiv="refresh" content="0;url=vnc.html?autoconnect=true&resize=scale">
+          </head>
+          <body>
+          <p>Connecting to desktop...</p>
+          <p>Note: This static page requires a running VNC backend to function.</p>
+          </body>
+          </html>
+          INDEXEOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
