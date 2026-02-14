@@ -23,8 +23,20 @@ jobs:
 
       - name: Install Desktop Packages
         run: |
-          # Устанавливаем через интернет
-          sudo apt install -y tigervnc-standalone-server fluxbox xterm pcmanfm novnc python3 openssl xorg xauth x11-xserver-utils firefox
+          sudo apt update
+          sudo apt install -y \
+          tigervnc-standalone-server \
+          fluxbox \
+          xterm \
+          pcmanfm \
+          novnc \
+          python3 \
+          openssl \
+          xorg \
+          xauth \
+          x11-xserver-utils \
+          x11vnc \
+          firefox
 
       - name: Copy noVNC Web Assets
         run: |
