@@ -32,9 +32,7 @@ cat > ~/.fluxbox/menu <<'EOF'
 [end]
 EOF
 
-echo "Запуск рабочего стола BoyJack OS..."
-if command -v startx >/dev/null 2>&1; then
-    startx
-else
-    echo "X-сервер не найден. Установите xserver-xorg и xinit."
-fi
+sudo apt install -y xvfb
+Xvfb :1 -screen 0 1024x768x16 &
+export DISPLAY=:1
+startfluxbox &
